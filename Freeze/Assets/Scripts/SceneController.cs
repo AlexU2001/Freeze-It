@@ -30,16 +30,19 @@ public class SceneController : MonoBehaviour
     }
     public void GoToNextLevel()
     {
-        Debug.Log("Going to next...");
         int max = SceneManager.sceneCountInBuildSettings;
         int nextLevel = (SceneManager.GetActiveScene().buildIndex + 1) % max;
-        Debug.Log("Next is level " + nextLevel);
-        if(nextLevel == 0)
+        GoToLevel(nextLevel);
+    }
+
+    public void GoToLevel(int level)
+    {
+        if (level <= 0)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-        SceneManager.LoadScene(nextLevel);
+        SceneManager.LoadScene(level);
     }
 
     public void RestartScene()
@@ -49,6 +52,7 @@ public class SceneController : MonoBehaviour
 
     public void Quit()
     {
+        Debug.Log("I'm a quitter");
         Application.Quit();
     }
 }

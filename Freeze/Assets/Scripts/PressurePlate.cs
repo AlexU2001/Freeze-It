@@ -24,7 +24,7 @@ public class PressurePlate : MonoBehaviour
         _defaultPos = transform.localPosition;
         _triggeredPos = new Vector3(_defaultPos.x, _defaultPos.y + _unitsToMove, _defaultPos.z);
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Trigger"))
             return;

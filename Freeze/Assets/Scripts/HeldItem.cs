@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -21,14 +22,26 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     private Vector3 _startPos;
     private const float _yLimit = -100f;
 
+    private AudioPlayer _audioPlayer;
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
         _rb = GetComponent<Rigidbody>();
+        _audioPlayer = GetComponentInChildren<AudioPlayer>();
     }
     void Start()
     {
         _startPos = transform.position;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+        {
+            if (_audioPlayer != null && !_frozen)
+                _audioPlayer.Play("Thud");
+        }
     }
 
     void Update()
@@ -55,6 +68,8 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     public void OnFreeze()
     {
         _frozen = true;
+        if (_audioPlayer != null)
+            _audioPlayer.Play("Freeze", 0.25f, true);
         _rb.constraints = RigidbodyConstraints.FreezeAll;
         OnDrop();
         _freezeParticles.Play();

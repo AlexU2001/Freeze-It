@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System.Collections;
 using UnityEngine;
 
@@ -12,11 +13,16 @@ public class Gate : MonoBehaviour
 
     private Coroutine _coroutine;
 
+    private AudioPlayer _audioPlayer;
+    private void Awake()
+    {
+        _audioPlayer = GetComponentInChildren<AudioPlayer>();
+    }
     private void Start()
     {
         _closedPos = transform.localPosition;
         _openPos = new Vector3(_closedPos.x, _closedPos.y + _unitsToMove, _closedPos.z);
-        Debug.Log("Closed: " + _closedPos + " Open: " + _openPos);
+        //Debug.Log("Closed: " + _closedPos + " Open: " + _openPos);
     }
 
     private void OnEnable()
@@ -60,6 +66,8 @@ public class Gate : MonoBehaviour
         if (_coroutine != null)
             StopCoroutine(_coroutine);
         _coroutine = StartCoroutine(OpenClose(_openPos));
+        _audioPlayer.Play("Open");
+        _audioPlayer.FadeOut("Close",1f);
     }
 
     private void Close(int id)
@@ -69,6 +77,8 @@ public class Gate : MonoBehaviour
         if (_coroutine != null)
             StopCoroutine(_coroutine);
         _coroutine = StartCoroutine(OpenClose(_closedPos));
+        _audioPlayer.Play("Close");
+        _audioPlayer.FadeOut("Open", 1f);
     }
 
     private IEnumerator OpenClose(Vector3 targetPos)
@@ -84,5 +94,9 @@ public class Gate : MonoBehaviour
             yield return null;
         }
         transform.localPosition = targetPos;
+        if (targetPos.Equals(_openPos))
+            _audioPlayer.Stop("Open");
+        else
+            _audioPlayer.Stop("Close");
     }
 }

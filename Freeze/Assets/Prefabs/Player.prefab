@@ -122,9 +122,6 @@ MonoBehaviour:
   - {fileID: 5174607263551317137}
   - {fileID: 4394641337844198548}
   - {fileID: 7524095493776029887}
-  maxSlopeAngle: 45
-  _downwardForce: 80
-  _slopeForce: 20
   _orientation: {fileID: 3972768241633058796}
 --- !u!114 &230577359544283356
 MonoBehaviour:
@@ -439,7 +436,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8877467182543106090}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 946a5589abc1e724e9d0260579a159cd, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

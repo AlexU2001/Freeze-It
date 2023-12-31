@@ -22,13 +22,13 @@ public class PlayerCamera : MonoBehaviour
     private void OnEnable()
     {
         OptionsMenu.SensSlider += UpdateSens;
-        OptionsMenu.PausePressed += OnPauseUnpause;
+        PauseMenu.PausePressed += OnPauseUnpause;
     }
 
     private void OnDisable()
     {
         OptionsMenu.SensSlider -= UpdateSens;
-        OptionsMenu.PausePressed -= OnPauseUnpause;
+        PauseMenu.PausePressed -= OnPauseUnpause;
     }
 
     private void Update()
