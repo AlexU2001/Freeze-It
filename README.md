@@ -1,7 +1,7 @@
 # Freeze It
  A game for the lighting game jam with the theme of freezing
 
- ## Patch Notes for Post Jam Update
+ ## Patch Notes for Post Jam Update (Not Yet Released)
  ### Major Changes
  * New Mechanic, gates can now be blocked by frozen objects.
  * New ice cube types, deep and light, with freeze duration of 3 and 10 respectively.
