@@ -12,6 +12,8 @@ public class Gate : MonoBehaviour
     private Vector3 _openPos;
 
     private Coroutine _coroutine;
+    private bool _stuck = false;
+    private HeldItem _heldItem;
 
     private AudioPlayer _audioPlayer;
     private void Awake()
@@ -39,6 +41,18 @@ public class Gate : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("Trigger"))
+        {
+            HeldItem item = collision.gameObject.GetComponent<HeldItem>();
+            if (item == null || !item.IsFrozen())
+                return;
+
+            _heldItem = item;
+            _heldItem.OnUnfreeze += ResumeOperation;
+            _stuck = true;
+            return;
+        }
+
         if (!_isPlatform)
             return;
 
@@ -59,6 +73,13 @@ public class Gate : MonoBehaviour
         collision.transform.SetParent(null);
     }
 
+    private void ResumeOperation()
+    {
+        if (_stuck)
+            _stuck = false;
+        _heldItem.OnUnfreeze -= ResumeOperation;
+    }
+
     private void Open(int id)
     {
         if (id != _ID)
@@ -67,7 +88,7 @@ public class Gate : MonoBehaviour
             StopCoroutine(_coroutine);
         _coroutine = StartCoroutine(OpenClose(_openPos));
         _audioPlayer.Play("Open");
-        _audioPlayer.FadeOut("Close",1f);
+        _audioPlayer.FadeOut("Close", 1f);
     }
 
     private void Close(int id)
@@ -86,13 +107,15 @@ public class Gate : MonoBehaviour
         Vector3 currentPos = transform.localPosition;
         float duration = Mathf.Abs(_unitsToMove) / _speed;
         float elapsedTime = 0f;
+        WaitWhile ifStuck = new WaitWhile(() => _stuck);
         while (elapsedTime < duration)
         {
+            yield return ifStuck;
             elapsedTime += Time.deltaTime;
             Vector3 pos = Vector3.Lerp(currentPos, targetPos, elapsedTime / duration);
             transform.localPosition = pos;
-            yield return null;
         }
+
         transform.localPosition = targetPos;
         if (targetPos.Equals(_openPos))
             _audioPlayer.Stop("Open");

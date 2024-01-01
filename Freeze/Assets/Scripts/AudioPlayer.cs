@@ -97,7 +97,7 @@ namespace Assets.Scripts
         public void FadeOut(string name, float duration)
         {
             Sound sound = GetSound(name);
-            if (sound == null || sound.audioSource == null)
+            if (sound == null || sound.audioSource == null || !sound.audioSource.isPlaying)
                 return;
             if (sound.mutation != null)
                 StopCoroutine(sound.mutation);

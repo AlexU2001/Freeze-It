@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
 
     private bool _held = false;
     private bool _frozen = false;
+
+    public Action OnUnfreeze;
 
     [Header("Other")]
     [SerializeField] private int _ID = -1;
@@ -84,6 +87,7 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
 
     private void OnDefrost()
     {
+        OnUnfreeze?.Invoke();
         _freezeParticles.Stop();
         _rb.constraints = RigidbodyConstraints.None;
         _frozen = false;
