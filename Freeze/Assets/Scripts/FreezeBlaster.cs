@@ -1,16 +1,13 @@
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ParticleSystem))]
 public class FreezeBlaster : MonoBehaviour
 {
-
     public ParticleSystem particles;
-    public List<ParticleCollisionEvent> collisionEvents;
 
     void Start()
     {
-        particles = GetComponentInChildren<ParticleSystem>();
-        collisionEvents = new List<ParticleCollisionEvent>();
+        particles = GetComponent<ParticleSystem>();
     }
 
     void OnParticleCollision(GameObject other)
@@ -20,9 +17,11 @@ public class FreezeBlaster : MonoBehaviour
             return;
 
         HeldItem item = other.gameObject.GetComponent<HeldItem>();
-        if (item == null || item.IsFrozen())
+        if (item == null)
             return;
+        if (!item.IsFrozen())
+            item.OnFreeze();
+        item.AddFreezeTime(1f);
 
-        item.OnFreeze();
     }
 }

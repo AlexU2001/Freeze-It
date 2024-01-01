@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _freezeDuration: 10
+  _maxDuration: 12
   _freezeParticles: {fileID: 8143928777818376859}
   _ID: -1
 --- !u!1 &4716597929323737987

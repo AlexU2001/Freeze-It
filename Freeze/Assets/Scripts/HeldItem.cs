@@ -10,21 +10,25 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     private Collider _collider;
     private Rigidbody _rb;
 
-    [Header("Hold Settings")]
-    [SerializeField] private float _freezeDuration = 5f;
-    [SerializeField] private ParticleSystem _freezeParticles;
-
+    // Status
     private bool _held = false;
     private bool _frozen = false;
+
+    [Header("Freeze Settings")]
+    [SerializeField] private ParticleSystem _freezeParticles;
+    [SerializeField] private float _freezeDuration = 5f;
+    private float _elapsedTime = 0;
 
     public Action OnUnfreeze;
 
     [Header("Other")]
     [SerializeField] private int _ID = -1;
 
+    // Respawn settings
     private Vector3 _startPos;
     private const float _yLimit = -100f;
 
+    // Sound Settings
     private AudioPlayer _audioPlayer;
 
     private void Awake()
@@ -88,6 +92,7 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     private void OnDefrost()
     {
         OnUnfreeze?.Invoke();
+        _elapsedTime = _freezeDuration;
         _freezeParticles.Stop();
         _rb.constraints = RigidbodyConstraints.None;
         _frozen = false;
@@ -95,13 +100,23 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
 
     private IEnumerator Freeze()
     {
-        float elapsedTime = 0f;
-        while (elapsedTime < _freezeDuration)
+        _elapsedTime = 0f;
+        while (_elapsedTime < _freezeDuration)
         {
-            elapsedTime += Time.deltaTime;
+            _elapsedTime += Time.deltaTime;
             yield return null;
         }
         OnDefrost();
+    }
+
+    public void AddFreezeTime(float seconds)
+    {
+        float result = _elapsedTime - seconds;
+
+        if (result > 0)
+            _elapsedTime -= seconds;
+        else
+            _elapsedTime = 0f;
     }
 
     public bool IsHeld() { return _held; }

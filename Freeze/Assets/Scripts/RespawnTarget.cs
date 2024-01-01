@@ -14,6 +14,8 @@ public class RespawnTarget : MonoBehaviour, IRespawn
     }
     public void Respawn()
     {
+        if (_respawnTarget.CompareTag("Player"))
+            InputManager.GrabDrop?.Invoke();
         _respawnTarget.transform.position = _startingPosition;
         _rb.velocity = Vector3.zero;
     }
