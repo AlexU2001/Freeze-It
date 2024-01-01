@@ -25,7 +25,8 @@ There is no established timeline for when these changes will roll out however th
 1. New levels.
 2. More Music
 3. Way to distinguish between colored blocks for color blind players.
-4. Better looking levels
+4. Visual upgrades for existing objects
+5. Better looking levels
    * Adding some decorations and possibly forms of enviromental story telling is as far as I intend to go with this
 6. Keyboard rebinding
 7. Controller rebinding
