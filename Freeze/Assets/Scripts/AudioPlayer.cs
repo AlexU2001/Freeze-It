@@ -73,7 +73,7 @@ namespace Assets.Scripts
             {
                 float point = Random.Range(0, length - duration);
                 sound.audioSource.time = point;
-                Debug.Log(string.Format("Percent: {0} Length: {1} Duration: {2} Point: {3}", percent, length, duration, point));
+                //Debug.Log(string.Format("Percent: {0} Length: {1} Duration: {2} Point: {3}", percent, length, duration, point));
             }
             sound.audioSource.Play();
 

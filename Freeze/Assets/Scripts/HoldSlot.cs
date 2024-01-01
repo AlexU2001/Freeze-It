@@ -7,12 +7,13 @@ public class HoldSlot : MonoBehaviour
     [SerializeField] private Transform _objectGrabPoint;
     public void Hold(HeldItem target)
     {
-        if (IsHolding() || target.IsHeld() || _objectGrabPoint == null)
+        if (IsHolding() || target.IsHeld() || _objectGrabPoint == null || !target.IsInteractable())
             return;
 
         if (target.IsFrozen())
             target.Unfreeze();
 
+        //Debug.Log("Status of " + target.transform + " is " + target.IsInteractable());
         _items.Add(target);
         target.OnHold();
         target.transform.SetParent(_objectGrabPoint, false);

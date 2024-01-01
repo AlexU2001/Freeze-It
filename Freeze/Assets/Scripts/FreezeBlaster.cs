@@ -12,7 +12,7 @@ public class FreezeBlaster : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
-        Debug.Log("Collided");
+        //Debug.Log("Collided");
         if (!other.CompareTag("Trigger"))
             return;
 

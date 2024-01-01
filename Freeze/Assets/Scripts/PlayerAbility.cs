@@ -46,7 +46,11 @@ public class PlayerAbility : MonoBehaviour
         if (_hit.transform.TryGetComponent(out MonoBehaviour script))
         {
             if (script is IInteractable)
-                _crosshair.color = _interactColor;
+            {
+                IInteractable interactable = (IInteractable)script;
+                if (interactable.IsInteractable())
+                    _crosshair.color = _interactColor;
+            }
         }
     }
 
@@ -65,7 +69,6 @@ public class PlayerAbility : MonoBehaviour
         HeldItem item = _hit.transform.GetComponentInChildren<HeldItem>();
         if (item != null)
             _slot.Hold(item);
-
     }
 
     private void FreezeHeld()

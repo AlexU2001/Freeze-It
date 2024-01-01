@@ -15,6 +15,7 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     private bool _frozen = false;
 
     [Header("Freeze Settings")]
+    [SerializeField] private bool _pickUpOnFreeze = true;
     [SerializeField] private ParticleSystem _freezeParticles;
     [SerializeField] private float _freezeDuration = 5f;
     private float _elapsedTime = 0;
@@ -60,6 +61,9 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     }
     public void OnHold()
     {
+        if (!_pickUpOnFreeze && IsFrozen())
+            return;
+
         _held = true;
         _collider.enabled = false;
         _rb.useGravity = false;
@@ -118,9 +122,6 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
         else
             _elapsedTime = 0f;
     }
-
-    public bool IsHeld() { return _held; }
-    public bool IsFrozen() { return _frozen; }
     public void OnInteract() { }
     public void Respawn()
     {
@@ -129,9 +130,21 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
         transform.position = _startPos;
         transform.rotation = Quaternion.identity;
     }
+    // Getters
+    public bool IsHeld() { return _held; }
+    public bool IsFrozen() { return _frozen; }
 
     public int GetID()
     {
         return _ID;
+    }
+    public bool IsInteractable()
+    {
+        if(_pickUpOnFreeze)
+            return true;
+
+        bool result = !_pickUpOnFreeze && !IsFrozen();
+        //Debug.Log("Result: " + result);
+        return result;
     }
 }
