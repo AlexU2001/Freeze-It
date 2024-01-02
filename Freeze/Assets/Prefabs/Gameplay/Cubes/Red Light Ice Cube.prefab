@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6869825753005722124}
   - component: {fileID: 7128695978555845126}
   m_Layer: 3
-  m_Name: Deep Ice Cube
+  m_Name: Red Light Ice Cube
   m_TagString: Trigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 536088fa16319084889e3c9bb0a37180, type: 2}
+  - {fileID: 2100000, guid: e4e8d7ccd0b77294683e88c705abcd12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -148,10 +148,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528f482f13dde5546a5d3bc51053adb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pickUpOnFreeze: 0
+  _pickUpOnFreeze: 1
   _freezeParticles: {fileID: 8143928777818376859}
-  _freezeDuration: 7
-  _freezeThreshold: 0
+  _freezeDuration: 3
+  _freezeThreshold: 5
   _ID: -1
 --- !u!1 &4716597929323737987
 GameObject:
@@ -376,7 +376,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.19215688, g: 0.3137255, b: 0.8745099, a: 1}
+      maxColor: {r: 0.46666667, g: 0.29411766, b: 0.45524403, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}

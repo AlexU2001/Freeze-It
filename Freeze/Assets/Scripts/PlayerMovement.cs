@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Ground Settings")]
     [SerializeField] private float _playerHeight = 2f;
-    [SerializeField] LayerMask _groundMask;
+    [SerializeField] int _groundMask;
     [SerializeField] private float _groundDrag = 5f;
     [SerializeField] private Transform[] _points;
     bool _grounded;
@@ -35,14 +35,16 @@ public class PlayerMovement : MonoBehaviour
         _rb.freezeRotation = true;
     }
 
+    private void Start()
+    {
+        _groundMask = 1 << LayerMask.NameToLayer("Ground");
+        //_groundMask |= 1 << LayerMask.NameToLayer("Item");
+    }
+
     private void Update()
     {
         MyInput();
-        int hits = 0;
-        foreach (Transform t in _points)
-            if (Physics.Raycast(t.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _groundMask))
-                hits++;
-        _grounded = hits > 0;
+        UpdateGrounded();
 
         if (_grounded)
             _rb.drag = _groundDrag;
@@ -98,5 +100,27 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         _readyToJump = true;
+    }
+
+    private void UpdateGrounded()
+    {
+        RaycastHit hit;
+        int validHits = 0;
+        foreach (Transform t in _points)
+        {
+            bool result = Physics.Raycast(t.position, Vector3.down, out hit, _playerHeight * 0.5f + 0.2f, _groundMask);
+            if (result)
+            {
+                if (hit.transform.CompareTag("Trigger"))
+                {
+                    HeldItem item = hit.transform.GetComponent<HeldItem>();
+                    if (item.IsHeld())
+                        continue;
+                }
+                validHits++;
+            }
+        }
+        _grounded = validHits > 0;
+
     }
 }

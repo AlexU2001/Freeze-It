@@ -8,6 +8,7 @@ using UnityEngine;
 public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
 {
     private Collider _collider;
+    private static Collider _playerCollider;
     private Rigidbody _rb;
 
     // Status
@@ -18,6 +19,7 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     [SerializeField] private bool _pickUpOnFreeze = true;
     [SerializeField] private ParticleSystem _freezeParticles;
     [SerializeField] private float _freezeDuration = 5f;
+    [SerializeField] private int _freezeThreshold = 5;
     private float _elapsedTime = 0;
 
     public Action OnUnfreeze;
@@ -37,6 +39,8 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
         _collider = GetComponent<Collider>();
         _rb = GetComponent<Rigidbody>();
         _audioPlayer = GetComponentInChildren<AudioPlayer>();
+        if (_playerCollider == null)
+            _playerCollider = GameObject.FindWithTag("Player").GetComponentInChildren<Collider>();
     }
     void Start()
     {
@@ -47,8 +51,9 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     {
         if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
         {
-            if (_audioPlayer != null && !_frozen)
-                _audioPlayer.Play("Thud");
+            if (_audioPlayer == null || IsFrozen() || IsHeld())
+                return;
+            _audioPlayer.Play("Thud");
         }
     }
 
@@ -65,15 +70,16 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
             return;
 
         _held = true;
-        _collider.enabled = false;
+        _rb.isKinematic = true;
+        Physics.IgnoreCollision(_collider, _playerCollider, true);
         _rb.useGravity = false;
-        _rb.velocity = Vector3.zero;
     }
     public void OnDrop()
     {
         _held = false;
-        _collider.enabled = true;
         _rb.useGravity = true;
+        _rb.isKinematic = false;
+        Physics.IgnoreCollision(_collider, _playerCollider, false);
     }
 
     public void OnFreeze()
@@ -82,8 +88,10 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
         if (_audioPlayer != null)
             _audioPlayer.Play("Freeze", 0.25f, true);
         _rb.constraints = RigidbodyConstraints.FreezeAll;
-        OnDrop();
         _freezeParticles.Play();
+        if (IsHeld())
+            InputManager.GrabDrop?.Invoke();
+        //OnDrop();
         StartCoroutine(Freeze());
     }
 
@@ -126,9 +134,12 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     public void Respawn()
     {
         Debug.Log("Respawning object " + transform);
-        _rb.velocity = Vector3.zero;
+        if (!_rb.isKinematic)
+            _rb.velocity = Vector3.zero;
         transform.position = _startPos;
         transform.rotation = Quaternion.identity;
+        if (IsHeld())
+            InputManager.GrabDrop?.Invoke();
     }
     // Getters
     public bool IsHeld() { return _held; }
@@ -138,9 +149,12 @@ public class HeldItem : MonoBehaviour, IInteractable, IRespawn, IKey
     {
         return _ID;
     }
+
+    public int GetThreshold() { return _freezeThreshold; }
+
     public bool IsInteractable()
     {
-        if(_pickUpOnFreeze)
+        if (_pickUpOnFreeze)
             return true;
 
         bool result = !_pickUpOnFreeze && !IsFrozen();

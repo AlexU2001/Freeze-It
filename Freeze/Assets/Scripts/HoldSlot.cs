@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HoldSlot : MonoBehaviour
 {
-    private List<HeldItem> _items = new List<HeldItem>();
+    private HeldItem item;
     [SerializeField] private Transform _objectGrabPoint;
     public void Hold(HeldItem target)
     {
@@ -14,7 +13,7 @@ public class HoldSlot : MonoBehaviour
             target.Unfreeze();
 
         //Debug.Log("Status of " + target.transform + " is " + target.IsInteractable());
-        _items.Add(target);
+        item = target;
         target.OnHold();
         target.transform.SetParent(_objectGrabPoint, false);
         target.transform.position = transform.position;
@@ -25,23 +24,22 @@ public class HoldSlot : MonoBehaviour
         if (!IsHolding())
             return;
 
-        foreach (var item in _items)
-            item.OnDrop();
+        item.OnDrop();
         _objectGrabPoint.DetachChildren();
-        _items.Clear();
+        item = null;
     }
 
     public void Freeze()
     {
         if (!IsHolding())
             return;
-        foreach (var item in _items)
-            item.OnFreeze();
+
+        item.OnFreeze();
         Drop();
     }
 
     public bool IsHolding()
     {
-        return _items.Count > 0;
+        return item != null;
     }
 }
