@@ -13,7 +13,9 @@
 * Ice cube in level 1 has been changed into a light variant.
 * Level 3 cube display now has a block for the cubes to stand on before being pushed off.
 * Level 4 intended solution has changed.
-* New level 5 featuring the freeze blaster.
+* New level 5 introducing the freeze blaster.
+* New level 7
+  * Still working on the levels before, 7 has lots of variables so it has to go later. Might bump it higher actually.  
 ### Sound Updates
 * New game music.
 * Ice cubes play a sound when colliding with anything.
