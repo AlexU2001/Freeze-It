@@ -13,7 +13,9 @@
 * Ice cube in level 1 has been changed into a light variant.
 * Level 3 cube display now has a block for the cubes to stand on before being pushed off.
 * Level 4 intended solution has changed.
-* New level 5 featuring the freeze blaster.
+* New level 5 introducing the freeze blaster.
+* New level 7
+  * Still working on the levels before, 7 has lots of variables so it has to go later. Might bump it higher actually.  
 ### Sound Updates
 * New game music.
 * Ice cubes play a sound when colliding with anything.
@@ -35,10 +37,9 @@ There is no established timeline for when these changes will roll out however th
 
 ### Experimented Changes
 These are changes that I tried to and or wanted to implement but gave up
-* Grabbed objects cannot go through walls and would adjust to maintain themselves within the level space
+- [ ] Grabbed objects cannot go through walls and would adjust to maintain themselves within the level space
   * I haven't yet explored this. Until then placing objects through walls is a feature and is part of the puzzles. Though I'll use it sparingly.
-* Slopes, the player can't go up slopes very well. Adding better slope support could help the level design feel less... blocky.
+- [ ] Slopes, the player can't go up slopes very well. Adding better slope support could help the level design feel less... blocky.
   * My initial attempts were scrapped as I needed to manage my time to complete my jam submission.
-* Freeze blaster freezes held objects
-  * This would require changing some of the planned levels but I think would expand my toolkit. Initial experiments have failed.
+- [x] Freeze blaster freezes held objects
  
