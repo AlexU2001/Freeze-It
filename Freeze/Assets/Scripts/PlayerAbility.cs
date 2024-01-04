@@ -17,8 +17,8 @@ public class PlayerAbility : MonoBehaviour
 
     private void Start()
     {
-        _mask = LayerMask.NameToLayer("Player");
-        _mask = ~_mask;
+        _mask = 1 << 6;
+        _mask = ~(_mask);
         if (_cameraPoint == null)
             _cameraPoint = Camera.main.transform;
     }

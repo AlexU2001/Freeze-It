@@ -23,7 +23,7 @@ public class MusicManager : MonoBehaviour
     {
         if (_instance == null)
         {
-            Debug.Log("Instance was null");
+            //Debug.Log("Instance was null");
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }

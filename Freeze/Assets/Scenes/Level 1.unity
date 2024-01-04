@@ -1467,6 +1467,16 @@ PrefabInstance:
       propertyPath: m_SelectedVertices.Array.data[3]
       value: 19
       objectReference: {fileID: 0}
+    - target: {fileID: 4755642154661187541, guid: 9c81108ad2d75824c8b855d368feb08e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 536088fa16319084889e3c9bb0a37180, type: 2}
+    - target: {fileID: 4755642154661187541, guid: 9c81108ad2d75824c8b855d368feb08e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 536088fa16319084889e3c9bb0a37180, type: 2}
     - target: {fileID: 6315131348819287609, guid: 9c81108ad2d75824c8b855d368feb08e,
         type: 3}
       propertyPath: _isPlatform
