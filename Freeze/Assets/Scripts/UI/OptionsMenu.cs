@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class OptionsMenu : MonoBehaviour
@@ -18,6 +19,9 @@ public class OptionsMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _sensText;
     [SerializeField] private Slider _sensSlider;
     public static Action<float> SensSlider;
+
+    [SerializeField] private AudioMixerGroup[] _mixers;
+    [SerializeField] private Slider[] _volumeSliders;
 
     // Other
     private List<GameObject> _content;
@@ -51,6 +55,7 @@ public class OptionsMenu : MonoBehaviour
             _content = new List<GameObject>();
         foreach (var content in GameObject.FindGameObjectsWithTag("ContentUI"))
             _content.Add(content);
+        HideAll(_content[0]);
     }
     private void LoadPreferences()
     {
@@ -85,14 +90,22 @@ public class OptionsMenu : MonoBehaviour
             _resolution.GoToIndex(_resolution.options.Count - 1);
         }
 
-        UpdateResolution();
+        UpdateResolutionText();
     }
-
-    private void UpdateResolution()
+    public void LoadVolume()
     {
-        _resolutionTxt.text = _resolution.Get().ToString();
+        float value;
+        for (int i = 0; i < _mixers.Length; i++)
+        {
+            if (PlayerPrefs.HasKey(_mixers[i].name))
+                value = PlayerPrefs.GetFloat(_mixers[i].name);
+            else
+                value = 0.5f;
+            _volumeSliders[i].value = value;
+            //Debug.Log(string.Format("Got float {1} for {0}", _sliders[i].name, value));
+            UpdateMixer(i);
+        }
     }
-
     public void SelectTab(GameObject self)
     {
         HideAll(self);
@@ -100,36 +113,51 @@ public class OptionsMenu : MonoBehaviour
             self.SetActive(true);
     }
 
-    private void HideAll(GameObject except)
+    private void HideAll(GameObject exception)
     {
-        foreach (var item in _content)
+        foreach (var content in _content)
         {
-            if (item.Equals(except))
+            if (content == null)
                 continue;
-            item.gameObject.SetActive(false);
+            if (exception != null && content.Equals(exception))
+                continue;
+            content.gameObject.SetActive(false);
         }
+    }
+    private void UpdateResolutionText()
+    {
+        _resolutionTxt.text = _resolution.Get().ToString();
+    }
+    public void ApplyGraphics()
+    {
+        if (_vSync.isOn)
+            QualitySettings.vSyncCount = 1;
+        else
+            QualitySettings.vSyncCount = 0;
+        Resolution res = _resolution.Get();
+        Screen.SetResolution(res.width, res.height, _fullScreen.isOn);
     }
 
     public void DisplayNext(int target)
     {
-        Debug.Log("Going to next");
         switch (target)
         {
             case 0:
                 _resolution.Next();
                 break;
         }
+        UpdateResolutionText();
     }
 
     public void DisplayPrevious(int target)
     {
-        Debug.Log("Going to previous");
         switch (target)
         {
             case 0:
                 _resolution.Previous();
                 break;
         }
+        UpdateResolutionText();
     }
 
     public void ApplySensitivityChange()
@@ -139,6 +167,16 @@ public class OptionsMenu : MonoBehaviour
 
         SensSlider?.Invoke(_sensSlider.value);
         _sensText.text = "Sensitivity: " + _sensSlider.value;
+    }
+    public void UpdateMixer(int i)
+    {
+        float value = _volumeSliders[i].value;
+        if (value > 0)
+            _mixers[i].audioMixer.SetFloat("Volume" + i, Mathf.Log10(value) * 20);
+        else
+            _mixers[i].audioMixer.SetFloat("Volume" + i, -80);
+        PlayerPrefs.SetFloat(_mixers[i].name, value);
+        //Debug.Log(string.Format("Set float for {0} to {1}", _mixers[i].name, value));
     }
     public class Resolution
     {
@@ -173,6 +211,8 @@ public class OptionsMenu : MonoBehaviour
         public void Previous()
         {
             index--;
+            if (index < 0)
+                index = options.Count - 1;
             index = index % options.Count;
         }
         public void GoToIndex(int index)

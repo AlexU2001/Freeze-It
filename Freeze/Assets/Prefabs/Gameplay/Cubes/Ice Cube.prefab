@@ -5027,7 +5027,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05ab783dd27523448684596d3c997f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds:
+  _sounds:
   - name: Thud
     audioSource: {fileID: 0}
     clip: {fileID: 8300000, guid: dc12d570e1923894ab66c3c9f31508c4, type: 3}
@@ -5038,10 +5038,11 @@ MonoBehaviour:
   - name: Freeze
     audioSource: {fileID: 0}
     clip: {fileID: 8300000, guid: ea08e0fb73a43594b92a41514f78a650, type: 3}
-    volume: 0
+    volume: 1
     pitchMin: 0.8
     pitchMax: 1
     loop: 0
-  spatialBlend: 1
-  minDistance: 5
-  maxDistance: 15
+  _spatialBlend: 1
+  _minDistance: 5
+  _maxDistance: 12
+  _mixer: {fileID: -446274546328530547, guid: 1967ea1ff987c2d4fa1c4fbf311443e5, type: 2}

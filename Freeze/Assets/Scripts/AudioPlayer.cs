@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Assets.Scripts
 {
     public class AudioPlayer : MonoBehaviour
     {
-        [SerializeField] private Sound[] sounds;
-        [SerializeField] private float spatialBlend = 1;
-        [SerializeField] private float minDistance = 1;
-        [SerializeField] private float maxDistance = 3;
+        [SerializeField] private Sound[] _sounds;
+        [SerializeField] private float _spatialBlend = 1;
+        [SerializeField] private float _minDistance = 1;
+        [SerializeField] private float _maxDistance = 3;
+        [SerializeField] private AudioMixerGroup _mixer;
 
         private void Awake()
         {
@@ -17,13 +19,14 @@ namespace Assets.Scripts
 
         private void InitializeSounds()
         {
-            foreach (var sound in sounds)
+            foreach (var sound in _sounds)
             {
                 if (sound.clip == null)
                     continue;
 
                 sound.audioSource = gameObject.AddComponent<AudioSource>();
                 sound.audioSource.clip = sound.clip;
+                sound.audioSource.outputAudioMixerGroup = _mixer;
 
                 sound.audioSource.playOnAwake = false;
                 sound.audioSource.loop = sound.loop;
@@ -31,9 +34,9 @@ namespace Assets.Scripts
                 if (sound.volume <= 0)
                     sound.volume = 1;
                 sound.audioSource.volume = sound.volume;
-                sound.audioSource.spatialBlend = spatialBlend;
-                sound.audioSource.minDistance = minDistance;
-                sound.audioSource.maxDistance = maxDistance;
+                sound.audioSource.spatialBlend = _spatialBlend;
+                sound.audioSource.minDistance = _minDistance;
+                sound.audioSource.maxDistance = _maxDistance;
 
                 sound.audioSource.rolloffMode = AudioRolloffMode.Linear;
             }
@@ -134,7 +137,7 @@ namespace Assets.Scripts
 
         private Sound GetSound(string soundName)
         {
-            foreach (var item in sounds)
+            foreach (var item in _sounds)
             {
                 if (item.name.Equals(soundName) && item.audioSource != null)
                     return item;
